@@ -1,0 +1,61 @@
+
+;; java -jar /usr/local/share/java/kawa-2.1.jar -C KawaCode.scm
+;; jar cf FunctProg.jar eu
+
+
+
+(module-name "eu.oca.kawafunct.KawaCode")
+
+(require 'regex)
+
+(define-simple-class KawaCode ()
+
+  ;; (x ::double init-keyword: x:)
+  ;; ;; Alternative type-specification syntax.
+  ;; (y type: double init-keyword: y:)
+  ;; (zero-2d :: KawaCode allocation: 'static
+  ;;  init-value: (KawaCode 0))
+  ;; ;; An object initializer (constructor) method.
+  ;; ((*init* (x0 ::double) (y0 ::double))
+  ;;  (set! x x0)
+  ;;  (set! y y0))
+  ;; ((*init* (xy0 ::double))
+  ;;  ;; Call above 2-argument constructor.
+  ;;  (invoke-special KawaCode (this) '*init* xy0 xy0))
+
+  ;; Need a default constructor as well.
+  ((*init*) #!void)
+
+  ;; ((add (other ::KawaCode)) ::KawaCode
+  ;;  ;; Kawa compiles this using primitive Java types!
+  ;;  (KawaCode
+  ;;    x: (+ x other:x)
+  ;;    y: (+ y other:y)))
+  ;; ((scale (factor ::double)) ::KawaCode
+  ;;  (KawaCode x: (* factor x) y: (* factor y)))
+  
+  ;; ((norm) ::double
+  ;;  7.0 )
+
+  ;; ((plus L) ::int
+  ;;  (+ (car L) (cadr L)))
+
+  ;; ((carre L) ::gnu.lists.LList
+  ;;  (map (lambda (x) (* x x )) L))
+
+  ((blabla) ::java.lang.String ;;gnu.lists.FString
+   (begin 
+     (fct 2)
+     "be bop a lula"))
+
+  ((pwd) ::java.lang.String 
+   (gnu.kawa.io.FilePath:toString  (current-path)))
+
+)
+
+
+
+
+(define (fct x)
+    (+ x 3))
+

@@ -1,0 +1,369 @@
+;; Kawa Scheme code for java virtual machine and tomcat web server
+
+;; author: Damien Mattei
+
+;; compilation method:
+
+;; java -cp /usr/local/share/java/kawa-2.1.jar:/home/mattei/NetBeansProjects/Sidonie/build/web/WEB-INF/classes kawa.repl -C DBtoWebObserversKawa.scm
+;; 
+;; to add more tail-calls optimisations:
+;; java -cp /usr/local/share/java/kawa-2.1.jar:/home/mattei/NetBeansProjects/Sidonie/build/web/WEB-INF/classes kawa.repl --full-tailcalls -C DBtoWebObserversKawa.scm 
+;; jar cf ~/Dropbox/KawaFunctProg.jar eu
+
+
+
+(module-name "eu.oca.kawafunct.DBtoWebObserversKawa")
+
+(require 'regex)
+
+(include-relative  "../git/LOGIKI/lib/first-and-rest.scm")
+(include-relative  "../git/LOGIKI/lib/syntactic-sugar.scm") ;; YES in kawa you can include files from other schemes...
+(include-relative  "../git/LOGIKI/lib/display.scm")
+(include-relative  "../git/LOGIKI/lib/case.scm") ;; for CASE with STRINGS
+(include-relative  "../git/LOGIKI/lib/list.scm") ;; for remove-last used by map.scm
+(include-relative  "../git/LOGIKI/lib/set.scm") ;; for map-nil*
+(include-relative  "../git/LOGIKI/lib/map.scm") ;; for map-nil*
+
+
+
+
+(define-simple-class DBtoWebObserversKawa ()
+
+ 
+  (Nom ::java.lang.String init-keyword: Nom:)
+  (res ::java.lang.String init-keyword: res:)
+  
+  ((*init*
+	   (nomParam ::java.lang.String)
+	   )
+   
+   (set! Nom nomParam)
+   
+   #;(work))
+
+  
+  ;; Need a default constructor as well.
+  ((*init*) #!void)
+
+  
+  ((work) ::java.lang.String ;; do the job:
+
+   (eu.oca.DataBase:searchDriverStatic)
+   (display "DBtoWebObserversKawa : work : eu.oca.DataBase:searchDriverStatic PASSED")
+   (newline)
+   
+   (eu.oca.DataBase:connectStatic)
+   (display "DBtoWebObserversKawa : work : eu.oca.DataBase:connectStatic PASSED")
+   (newline)
+
+   (eu.oca.DataBase:createStatementStatic) ;; i put the statement here if it's true it can be reused for multiple SQL queries
+   (display "DBtoWebObserversKawa : work : eu.oca.DataBase:createStatementStatic PASSED")
+   (newline)
+
+   
+   (let* ((marequete "SELECT * FROM Obs ORDER BY Auteur")
+	  
+	  (rs ::java.sql.ResultSet #!null)
+	  (total '())
+	  (result '())
+	  (wds-url "http://ad.usno.navy.mil/wds/Webtextfiles/wdsnewref.txt")
+	  ;; (define wds-url "http://ad.usno.navy.mil/wds/Webtextfiles/wdsnewref.txt")
+	  (wds-data-str &<{&[wds-url]}) ;; could take a few seconds to GET file
+	  ;; (define wds-data-str &<{&[wds-url]})
+	  ;;(str1 (substring wds-data-str 0 30))
+	  (len-wds-data-str (string-length wds-data-str))
+	  
+	  ;; get and split using positions of the minus ----- lines
+	  (pos-minus  
+	   (regex-match-positions
+	    "-----------------------------------------------------------------------------------------------------------------------------" 
+	    wds-data-str))
+	  
+	  (pos-minus-end (cdr (car pos-minus)))
+	  
+	  (wds-data-str-minus-1 (substring
+				 wds-data-str
+				 pos-minus-end
+				 (- (string-length wds-data-str) 1)))
+	  
+	  (pos-minus2  
+	   (regex-match-positions
+	    "-----------------------------------------------------------------------------------------------------------------------------" 
+	    wds-data-str-minus-1))
+	  
+	  (pos-minus2-end (cdr (car pos-minus2)))
+	  
+	  (wds-data-str-minus-2 (substring
+				 wds-data-str-minus-1
+				 pos-minus2-end
+				 (- (string-length wds-data-str-minus-1) 1)))
+	  
+	  ;; get and split using positions of the equals ====== line
+	  (pos-equals
+	   (regex-match-positions
+	    "========================================================================================================"
+	    wds-data-str-minus-2))
+
+	  (pos-equals-begin (car (car pos-equals)))
+
+	  (wds-data-str-equals (substring
+				wds-data-str-minus-2
+				0
+				(- pos-equals-begin 1)))
+
+	  ;;(wds-data-str-split (regex-split (string #\return) wds-data-str)) 
+	  (wds-data-str-split (regex-split (string #\linefeed) wds-data-str-equals))
+	  ;; (define wds-data-str-split (regex-split (string #\linefeed) wds-data-str))
+
+	  ;; remove null string
+	  (rgx (begin 
+		 (display-nl  "DBtoWebObserversKawa : work : creating regex.")
+		 (regex "^[a-zA-Z]")))
+
+	  (tst-space-string
+	   (lambda (s)
+	     (if (regex-match rgx s)
+		 s
+		 '())))
+
+	  (wds-data-str-no-spaces 
+	   (begin
+	     (display-nl  "DBtoWebObserversKawa : work : running  map-nil-iter-optim-tail-calls-call....")
+	     ( map-nil-iter-optim-tail-calls-call tst-space-string wds-data-str-split )))
+
+	  )
+
+     (display-nl  "DBtoWebObserversKawa : work : after let* declarations.")
+     ;;(display-msg-var-nl  "DBtoWebObserversKawa : work : str1 = " str1)
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : length wds-data-str = " len-wds-data-str)
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (car wds-data-str-split) = " (car wds-data-str-split))
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (substring wds-data-str-minus-1 0 50) = " (substring wds-data-str-minus-1 0 50))
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (substring wds-data-str-minus-2 0 50) = " (substring wds-data-str-minus-2 0 50))
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (substring wds-data-str-equals 0 50) = " (substring wds-data-str-equals 0 50))
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (cadr wds-data-str-split) = " (cadr wds-data-str-split))
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : (car wds-data-str-no-spaces) = " (car wds-data-str-no-spaces))
+
+     (set! res 
+	   (gnu.lists.FString:toString
+	    (string-append 
+	      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">"
+	      "<html>"
+	      "<head>"
+	      #;"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">"
+	      "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
+	      "<meta name=\"GENERATOR\" content=\"Java Kawa Scheme\">"
+	      "<title>SIDONIe-Résultats statistiques</title>"
+	      "</head>"
+	      "<LINK rel=\"stylesheet\" href=\"../Style.css\" type=\"text/css\">"
+	      "<body  <!--bgcolor=\"#FFFFA6\" text=\"#004040\" link=\"#0000FF\" vlink=\"#808000\" alink=\"#800000\"-->")))
+     
+     
+
+
+     
+     
+     
+     ;; partie HTML
+     
+    
+	  
+     
+     ;; converting 
+     (set! marequete (sql-server->mysql-server-syntax marequete))
+
+     (display-msg-var-nl  "DBtoWebObserversKawa : work : Voila la valeur SQL de la requète : marequete = " marequete)
+     
+     (eu.oca.DataBase:executeQueryStatic 
+	   marequete
+	   "Observateurs")
+
+     (set! rs eu.oca.DataBase:resultSetObservateurs)
+     
+     (rs:first)
+
+     (set! total 0)
+
+     (set! res
+	   (gnu.lists.FString:toString
+		  (string-append
+		   res 
+		   "<h1 align=\"center\"><font color=\"#0000FF\">SIDONIe - Statistical Results</font></h1>"
+		   "<div align=\"center\">"
+		   "  <center>"
+		   "    <table width=\"85%\" border=\"3\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">"
+		   "          <tr>"
+		   "              <th width=\"82%\"><font color=\"#0000FF\">"  "<br></font></th>"
+		   "          </tr>"
+		   "    </table>"
+		   "  </center>"
+		   "</div>"
+		   "<P>"
+		   "<P>"
+		   "<table border=\"1\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"
+		   "<tr>"
+		   "    <th><font color=\"#000080\">Name</font></th>"
+                   "    <th><font color=\"#000080\">Alpha 2000</font></th>"
+		   "    <th><font color=\"#000080\">Delta 2000</font></th>"
+		   "    <th><font color=\"#000080\">BD #</font></th>"
+		   "    <th><font color=\"#000080\">ADS #</font></th>"
+		   "    <th><font color=\"#000080\">HIP #</font></th>"
+		   "    <th><font color=\"#000080\">mag 1</font></th>"
+		   "    <th><font color=\"#000080\">mag 2</font></th>"
+		   "    <th><font color=\"#000080\">Spectral type</font></th>"
+		   "</tr>")))
+
+     
+     (rs:beforeFirst)
+     
+	  (when (rs:next) ;; test SQL empty result set
+		
+		;; DO WHILE LOOP
+		
+		(while (not (rs:isAfterLast))
+		       
+		       (set! total (+ total 1))
+		       
+		       (append-string-to-result "<tr>")
+		       
+		       
+		       ;; 0 : code
+		       (set! result (rs:getString 1))
+		       
+		       (if (or (rs:wasNull) (string-null? result))
+			   
+			   (then-block
+			    (set! result "&nbsp;")
+			    (append-string-to-result "<td>")
+			    (append-string-to-result result)
+			    (append-string-to-result "</td>"))
+			   
+			   (else-block
+			    (append-string-to-result "<td>")
+			    (display-msg-var-nl  "DBtoWebObserversKawa : work : result = " result)
+			    (append-string-to-result (string-upcase result))
+			    (append-string-to-result "</td>")))
+		       
+		       
+		       ;; 1 : auteur (Observer)
+		       (set! result (rs:getString 2))
+		       (if (rs:wasNull)
+			     (set! result "NuLL"))
+		       (append-string-to-result "<td>")
+		       (display-msg-var-nl  "DBtoWebObserversKawa : work : result = " result)
+		       (append-string-to-result result)
+		       (append-string-to-result "</td>")
+		       
+		       (rs:next) ;; rs.Movenext in ASP
+		       
+		       ) ;; end WHILE (Do While ... Loop) 
+
+		) ;; end when (test empty SQL result set)
+
+	  (display-msg-var-nl  "DBtoWebObserversKawa : work : total = " total)
+
+	  (append-string-to-result 
+	   (string-append
+	    "</table>
+             <P>
+             <P>
+             <table width=\"60%\" border=\"3\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">
+                 <tr>
+                     <th><font color=\"#0000FF\"> Number of selected objects<br></font></th>
+                     <th>" (number->string total) "</th>
+                 </tr>
+             </table>"))
+
+	  
+
+
+    
+
+     ;; we are in jersey/ path of the URL
+     (append-string-to-result 
+	    "<P>
+             <P>
+<br>
+BiwaScheme
+<br>
+                <script src=\"/Sidonie/scripts/biwascheme.js\">
+	                (print \"Hello, world!\")
+	                (print (current-date))
+	                (print (file-exists? \"/toto\"))
+	                (console-log \"biwascheme ok.\")
+                </script>
+             <table border=\"0\" width=\"95%\">
+                <tr>
+                    <td valign=\"top\"><a href=\"../SidonieObject.htm\"> <img border=\"0\" src=\"../retour_blanc.gif\" width=\"26\" height=\"26\"></a>
+       
+                    <font size=\"2\"><em>Search on an object</em></font></td>
+
+	            <td valign=\"top\"><a href=\"../SidonieStatistic.htm\"><img border=\"0\" src=\"../retour_blanc.gif\" width=\"26\" height=\"26\"></a>
+
+                    <font size=\"2\"><em>Statistical Search</em></font></td>
+                    </td>
+                </tr>
+            </table>
+        </body>
+    </html>")
+
+
+     ) ;; end let*
+   
+   (eu.oca.DataBase:closeStatic)
+   (display "DBtoWebObserversKawa : work : eu.oca.DataBase:closeStatic PASSED")
+   (newline)
+
+   ;; (eu.oca.DataBase:deregisterDriverStatic)
+   ;; (display "ResultatGeneralFKawa : work : eu.oca.DataBase:deregisterDriverStatic PASSED")
+   ;; (newline)
+
+   
+   ;;(display-msg-var-nl  "DBtoWebObserversKawa : work : res = " res)
+   
+   res) ;; return a String
+  
+
+
+
+
+
+
+  
+  ;; other Class definition functions
+
+
+  
+  ((sql-server->mysql-server-syntax query) ;; replace [ and ] by `
+   (regex-replace* (regex "\\]") (regex-replace* (regex "\\[") query "`") "`"))
+
+  
+  ((append-string-to-result str) ;; append a string to result
+   (set! res
+	 (gnu.lists.FString:toString
+	  (string-append res str))))
+
+  
+  ((string-null? str)
+   (string=? str ""))
+
+  
+  ((fix x)
+   (display-nl "DBtoWebObserversKawa.scm :: entering fix")
+   (let ((r (inexact->exact (truncate x))))
+     (display "ResultatGeneralFKawa.scm :: fix :: r =")
+     (display r)
+     (newline)
+    r))
+
+  
+  ) ;; end of class
+
+
+
+
+
+
+
+
+
+
