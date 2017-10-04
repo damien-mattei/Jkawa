@@ -51,6 +51,8 @@
 	    (string-append var str))))))
 
 
+
+
 (define-simple-class DBtoWebObserversKawa ()
 
  
@@ -76,6 +78,8 @@
   
   ((work) ::java.lang.String ;; do the job:
 
+   ;;(define debug-mode #t)
+   ;;(define-variable debug-mode #t)
    (eu.oca.DataBase:searchDriverStatic)
    (display "Sidonie : DBtoWebObserversKawa : work : eu.oca.DataBase:searchDriverStatic PASSED")
    (newline)
@@ -251,11 +255,11 @@
 	  (res-alpha-codes "") ;; warning: res is global and typed but res-alpha-codes not ! 
 	  (res-alpha-names-english "")
 	  (sorted-obs-code-lst '()) ;; sorted observateur - code list
-	  (debug-mode #t)
+	  ;;(debug-mode #t)
 	  ) ;; end of LET
 
      
-     ;;(set! debug-mode #t)
+     (set! debug-mode #f)
      ;; debug display
      (display-var-nl "Sidonie : DBtoWebObserversKawa : work :: debug-mode = " debug-mode)
 
