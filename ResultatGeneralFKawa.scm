@@ -4,7 +4,7 @@
 
 ;; compilation method:
 
-;;  java -cp /usr/local/share/java/kawa-2.1.jar:/home/mattei/NetBeansProjects/Sidonie/build/web/WEB-INF/classes kawa.repl -C ResultatGeneralFKawa.scm
+;; java -cp /usr/local/share/java/kawa-2.1.jar:/home/mattei/NetBeansProjects/Sidonie/build/web/WEB-INF/classes kawa.repl -C ResultatGeneralFKawa.scm
 ;; jar cf ~/Dropbox/KawaFunctProg.jar eu
 
 ;; old and other method,depending jdk version:
@@ -23,6 +23,7 @@
 ;; TODO: replace include-relative by include
 (include-relative  "../git/LOGIKI/lib/syntactic-sugar.scm") ;; YES in kawa you can include files from other schemes...
 (include-relative  "../git/LOGIKI/lib/display.scm")
+(include-relative  "../git/LOGIKI/lib/debug.scm") ;; for debug
 (include-relative  "../git/LOGIKI/lib/case.scm") ;; for CASE with STRINGS
 
 
@@ -235,6 +236,8 @@
 	  (iresult '())
 	  (aresult '())
 	  )
+
+     (set! debug-mode #f)
      
      (set! res 
 	   (gnu.lists.FString:toString
@@ -252,14 +255,14 @@
      
      (display-msg-var-nl  "ResultatGeneralFKawa : work : marequete = " marequete)
   
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : caseannee = " caseannee)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : caseannee = " caseannee)
 
      (if-t (and (string? caseannee) (string=? caseannee "ON"))
-	   (display-nl  "ResultatGeneralFKawa : work : dans if-t ... caseannee")
+	   (debug-only display-nl  "ResultatGeneralFKawa : work : dans if-t ... caseannee")
 	   (set! erreurgeneral 1)
 	   (set! data annee)
-	   (display-msg-var-nl  "ResultatGeneralFKawa : work : annee = " annee)
-	   (display-msg-var-nl  "ResultatGeneralFKawa : work : data = " data)
+	   (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : annee = " annee)
+	   (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : data = " data)
 	   (if (string=? data "")
 	       (begin
 		 (set! flagerreur 1)
@@ -284,7 +287,7 @@
 
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casenbmes = " casenbmes)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casenbmes = " casenbmes)
 
      (if-t (and (string? casenbmes) (string=? casenbmes "ON"))
 	   (set! erreurgeneral 1)
@@ -307,7 +310,7 @@
 		     (set! marequete (string-append marequete Et "Count(Mesures.Date) <= " data)))))) ;; enf if-t
      
      
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casesepar = " casesepar)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casesepar = " casesepar)
 
      (if-t (and (string? casesepar) (string=? casesepar "ON"))
 	   (set! erreurgeneral 1)
@@ -332,7 +335,7 @@
 
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casenom = " casenom)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casenom = " casenom)
 
      (if-t (and (string? casenom) (string=? casenom "ON"))
 	   (set! erreurgeneral 1)
@@ -353,7 +356,7 @@
 		     (set! marequete (string-append marequete  Et "Coordonnées.Nom like '" objet " _%" "'"))))))
 
 		   
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : caseHIP = " caseHIP)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : caseHIP = " caseHIP)
 
      (if-t (and (string? caseHIP) (string=? caseHIP "ON"))
 	   (set! erreurgeneral 1)
@@ -368,7 +371,7 @@
 		 (set! marequete (string-append marequete  Et "Coordonnées.[N° HIP] not like '*'")))))
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : caseorb = " caseorb)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : caseorb = " caseorb)
 
      (if-t (and (string? caseorb) (string=? caseorb "ON"))
 	   (set! erreurgeneral 1)
@@ -383,7 +386,7 @@
 		 (set! marequete (string-append marequete  Et "Coordonnées.Orb like 'OUI'")))))
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casealfa = " casealfa)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casealfa = " casealfa)
 
      (if-t (and (string? casealfa) (string=? casealfa "ON"))
 	   (set! erreurgeneral 1)
@@ -460,7 +463,7 @@
 
      ;;  casedelta
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casedelta = " casedelta)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casedelta = " casedelta)
      
      (if-t (and (string? casedelta) (string=? casedelta "ON"))
 	   (set! erreurgeneral 1)
@@ -537,7 +540,7 @@
 
      
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casemag1 = " casemag1)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casemag1 = " casemag1)
 
      (if-t (and (string? casemag1) (string=? casemag1 "ON"))
 	   (set! erreurgeneral 1)
@@ -566,7 +569,7 @@
 		     ;;(set! marequete (string-append marequete Et "Cdbl(Coordonnées.mag1) <= " "Cdbl(" mag1max ")"))))))
 		     (set! marequete (string-append marequete Et "CAST(Coordonnées.mag1 as DECIMAL(9,2)) <= "  mag1max))))))
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casemag2 = " casemag2)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casemag2 = " casemag2)
 
      ;; casemag2
      (if-t (and (string? casemag2) (string=? casemag2 "ON"))
@@ -597,7 +600,7 @@
 		     (set! marequete (string-append marequete Et "CAST(Coordonnées.mag2 as DECIMAL(9,2)) <= "  mag2max))))))
 
 		     
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casediffmag = " casediffmag)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casediffmag = " casediffmag)
 
      ;; casediffmag
      (if-t (and (string? casediffmag) (string=? casediffmag "ON"))
@@ -622,7 +625,7 @@
 		     (set! marequete (string-append marequete Et "(CAST(Coordonnées.mag2 as DECIMAL(9,2)) - CAST(Coordonnées.mag1 as DECIMAL(9,2))) >= " diffmag))))))
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : casetype = " casetype)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : casetype = " casetype)
 
      (if-t (and (string? casetype) (string=? casetype "ON"))
 	   (set! erreurgeneral 1)
@@ -1064,8 +1067,8 @@
 	 ) ;; end (if (or (= flagerreur 1) (= erreurgeneral 0))
 
 
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : baraterreur = " baraterreur)
-     (display-msg-var-nl  "ResultatGeneralFKawa : work : baratin = " baratin)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : baraterreur = " baraterreur)
+     (debug-only display-msg-var-nl  "ResultatGeneralFKawa : work : baratin = " baratin)
 
 
      ;; we are in jersey/ path of the URL
@@ -1119,11 +1122,11 @@
    (string=? str ""))
 
   ((fix x)
-   (display-nl "ResultatGeneralFKawa.scm :: entering fix")
+   (debug-only display-nl "ResultatGeneralFKawa.scm :: entering fix")
    (let ((r (inexact->exact (truncate x))))
-     (display "ResultatGeneralFKawa.scm :: fix :: r =")
-     (display r)
-     (newline)
+     (debug-only display "ResultatGeneralFKawa.scm :: fix :: r =")
+     (debug-only display r)
+     (debug-only newline)
      r))
   
   ) ;; end of class

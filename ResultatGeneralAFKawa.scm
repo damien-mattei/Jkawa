@@ -22,6 +22,7 @@
 
 (include-relative  "../git/LOGIKI/lib/syntactic-sugar.scm") ;; YES in kawa you can include files from other schemes...
 (include-relative  "../git/LOGIKI/lib/display.scm")
+(include-relative  "../git/LOGIKI/lib/debug.scm") ;; for debug
 (include-relative  "../git/LOGIKI/lib/case.scm") ;; for CASE with STRINGS
 
 
@@ -235,6 +236,8 @@
 	  (aresult '())
 	  )
      
+     (set! debug-mode #f)
+
      (set! res 
 	   (gnu.lists.FString:toString
 	    (string-append 
@@ -251,14 +254,14 @@
      
      (display-msg-var-nl  "ResultatGeneralAFKawa : work : marequete = " marequete)
   
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : caseannee = " caseannee)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : caseannee = " caseannee)
 
      (if-t (and (string? caseannee) (string=? caseannee "ON"))
-	   (display-nl  "ResultatGeneralAFKawa : work : dans if-t ... caseannee")
+	   (debug-only display-nl  "ResultatGeneralAFKawa : work : dans if-t ... caseannee")
 	   (set! erreurgeneral 1)
 	   (set! data annee)
-	   (display-msg-var-nl  "ResultatGeneralAFKawa : work : annee = " annee)
-	   (display-msg-var-nl  "ResultatGeneralAFKawa : work : data = " data)
+	   (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : annee = " annee)
+	   (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : data = " data)
 	   (if (string=? data "")
 	       (begin
 		 (set! flagerreur 1)
@@ -280,7 +283,7 @@
 
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casenbmes = " casenbmes)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casenbmes = " casenbmes)
 
      (if-t (and (string? casenbmes) (string=? casenbmes "ON"))
 	   (set! erreurgeneral 1)
@@ -303,7 +306,7 @@
 		     (set! marequete (string-append marequete Et "Count(Mesures.Date) <= " data)))))) ;; enf if-t
      
      
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casesepar = " casesepar)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casesepar = " casesepar)
 
      (if-t (and (string? casesepar) (string=? casesepar "ON"))
 	   (set! erreurgeneral 1)
@@ -328,7 +331,7 @@
 
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casenom = " casenom)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casenom = " casenom)
 
      (if-t (and (string? casenom) (string=? casenom "ON"))
 	   (set! erreurgeneral 1)
@@ -349,7 +352,7 @@
 		     (set! marequete (string-append marequete  Et "Coordonnées.Nom like '" objet " _%" "'"))))))
 
 		   
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : caseHIP = " caseHIP)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : caseHIP = " caseHIP)
 
      (if-t (and (string? caseHIP) (string=? caseHIP "ON"))
 	   (set! erreurgeneral 1)
@@ -364,7 +367,7 @@
 		 (set! marequete (string-append marequete  Et "Coordonnées.[N° HIP] not like '*'")))))
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : caseorb = " caseorb)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : caseorb = " caseorb)
 
      (if-t (and (string? caseorb) (string=? caseorb "ON"))
 	   (set! erreurgeneral 1)
@@ -379,7 +382,7 @@
 		 (set! marequete (string-append marequete  Et "Coordonnées.Orb like 'OUI'")))))
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casealfa = " casealfa)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casealfa = " casealfa)
 
      (if-t (and (string? casealfa) (string=? casealfa "ON"))
 	   (set! erreurgeneral 1)
@@ -456,7 +459,7 @@
 
      ;;  casedelta
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casedelta = " casedelta)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casedelta = " casedelta)
      
      (if-t (and (string? casedelta) (string=? casedelta "ON"))
 	   (set! erreurgeneral 1)
@@ -533,7 +536,7 @@
 
      
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casemag1 = " casemag1)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casemag1 = " casemag1)
 
      (if-t (and (string? casemag1) (string=? casemag1 "ON"))
 	   (set! erreurgeneral 1)
@@ -563,7 +566,7 @@
 		     (set! marequete (string-append marequete Et "CAST(Coordonnées.mag1 as DECIMAL(9,2)) <= "  mag1max))))))
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casemag2 = " casemag2)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casemag2 = " casemag2)
 
      ;; casemag2
      (if-t (and (string? casemag2) (string=? casemag2 "ON"))
@@ -594,7 +597,7 @@
 		     (set! marequete (string-append marequete Et "CAST(Coordonnées.mag2 as DECIMAL(9,2)) <= "  mag2max))))))
 
 		     
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casediffmag = " casediffmag)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casediffmag = " casediffmag)
 
      ;; casediffmag
      (if-t (and (string? casediffmag) (string=? casediffmag "ON"))
@@ -620,7 +623,7 @@
 
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : casetype = " casetype)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : casetype = " casetype)
 
      
 
@@ -633,27 +636,27 @@
 	       ;; else
 	       (begin
 
-		 (display-msg-var-nl  "ResultatGeneralAFKawa : work : type1 = " type1)
-		 (display-msg-var-nl  "ResultatGeneralAFKawa : work : type2 = " type2)
+		 (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : type1 = " type1)
+		 (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : type2 = " type2)
 
-		 (display-msg-var-nl  "ResultatGeneralAFKawa : work : Nom = " Nom)
+		 (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : Nom = " Nom)
 
 		 (if (equal? "B5" type1)
-		     (display-nl "ResultatGeneralAFKawa : work : equal? test TRUE")
-		     (display-nl "ResultatGeneralAFKawa : work : equal? test FALSE"))
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : equal? test TRUE")
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : equal? test FALSE"))
 
 		 (if (eqv? "B5" type1)
-		     (display-nl "ResultatGeneralAFKawa : work : eqv? test TRUE")
-		     (display-nl "ResultatGeneralAFKawa : work : eqv? test FALSE"))
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : eqv? test TRUE")
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : eqv? test FALSE"))
 
 		 ;;(display (string-append "|" (type1:getClass:getName) "|"))
-		 (display "ResultatGeneralAFKawa : work : type1 is of type : ") 
-		 (display   (invoke type1:class 'getName) )
-		 (newline)
+		 (debug-only display "ResultatGeneralAFKawa : work : type1 is of type : ") 
+		 (debug-only display   (invoke type1:class 'getName) )
+		 (debug-only newline)
 
-		 (display "ResultatGeneralAFKawa : work : B5 is of type : ") 
-		 (display   (invoke "B5":class 'getName) )
-		 (newline)
+		 (debug-only display "ResultatGeneralAFKawa : work : B5 is of type : ") 
+		 (debug-only display   (invoke "B5":class 'getName) )
+		 (debug-only newline)
 
 		 ;; (if (eqv? (gnu.lists.FString:toString "B5") type1)
 		 ;; 	 (display-nl "ResultatGeneralAFKawa : work : eqv? gnu.lists.FString:toString test TRUE")
@@ -664,13 +667,13 @@
 		 ;; 	 (display-nl "ResultatGeneralAFKawa : work : eqv? gnu.lists.FString:toString test FALSE"))
 
 		 (if (eq? "B5" type1)
-		     (display-nl "ResultatGeneralAFKawa : work : eq? test TRUE")
-		     (display-nl "ResultatGeneralAFKawa : work : eq? test FALSE"))
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : eq? test TRUE")
+		     (debug-only display-nl "ResultatGeneralAFKawa : work : eq? test FALSE"))
 
 
-		 (display "ResultatGeneralAFKawa : work : nutype1 is of type : ") 
-		 (display   (invoke nutype1:class 'getName) )
-		 (newline)
+		 (debug-only display "ResultatGeneralAFKawa : work : nutype1 is of type : ") 
+		 (debug-only display   (invoke nutype1:class 'getName) )
+		 (debug-only newline)
 
 		 (set! nutype1
 		       (case-member type1
@@ -1102,8 +1105,8 @@
 	 ) ;; end (if (or (= flagerreur 1) (= erreurgeneral 0))
 
 
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : baraterreur = " baraterreur)
-     (display-msg-var-nl  "ResultatGeneralAFKawa : work : baratin = " baratin)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : baraterreur = " baraterreur)
+     (debug-only display-msg-var-nl  "ResultatGeneralAFKawa : work : baratin = " baratin)
 
 
      ;; we are in jersey/ path of the URL
@@ -1156,11 +1159,11 @@
    (string=? str ""))
 
   ((fix x)
-   (display-nl "ResultatGeneralAFKawa.scm :: entering fix")
+   (debug-only display-nl "ResultatGeneralAFKawa.scm :: entering fix")
    (let ((r (inexact->exact (truncate x))))
-     (display "ResultatGeneralFKawa.scm :: fix :: r =")
-     (display r)
-     (newline)
+     (debug-only display "ResultatGeneralFKawa.scm :: fix :: r =")
+     (debug-only display r)
+     (debug-only newline)
     r))
   
   ) ;; end of class

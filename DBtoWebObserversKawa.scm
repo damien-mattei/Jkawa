@@ -674,7 +674,7 @@
    (let ((r (inexact->exact (truncate x))))
      (debug-display "Sidonie : DBtoWebObserversKawa.scm :: fix :: r =")
      (debug-display r)
-     (newline)
+     (debug-only newline)
     r))
 
 
