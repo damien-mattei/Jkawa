@@ -21,10 +21,10 @@
 
 
 ;; TODO: replace include-relative by include
-(include-relative  "../git/LOGIKI/lib/syntactic-sugar.scm") ;; YES in kawa you can include files from other schemes...
-(include-relative  "../git/LOGIKI/lib/display.scm")
-(include-relative  "../git/LOGIKI/lib/debug.scm") ;; for debug
-(include-relative  "../git/LOGIKI/lib/case.scm") ;; for CASE with STRINGS
+(include-relative  "../git/library-FunctProg/syntactic-sugar.scm") ;; YES in kawa you can include files from other schemes...
+(include-relative  "../git/library-FunctProg/display.scm")
+(include-relative  "../git/library-FunctProg/debug.scm") ;; for debug
+(include-relative  "../git/library-FunctProg/case.scm") ;; for CASE with STRINGS
 
 
 (define-simple-class ResultatGeneralFKawa ()
